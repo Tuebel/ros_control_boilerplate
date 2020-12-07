@@ -65,16 +65,45 @@ bool CombinableGenericHWAdapter<ConcreteGenericHW>::init(ros::NodeHandle& root_n
   return true;
 }
 
+// SFINAE for GenericHWInterface override
+namespace combinable_hw_dispatch
+{
+template <typename ConcreteGenericHW>
+typename std::enable_if<!std::is_base_of<GenericHWInterface, ConcreteGenericHW>::value>::type
+read(const ros::Time& time, const ros::Duration& period, std::shared_ptr<ConcreteGenericHW> adapted_hw_interface)
+{
+  adapted_hw_interface->read(time, period);
+}
+
+void read(const ros::Time& time, const ros::Duration& period, std::shared_ptr<GenericHWInterface> adapted_hw_interface)
+{
+  adapted_hw_interface->read(time, period);
+}
+
+template <typename ConcreteGenericHW>
+typename std::enable_if<!std::is_base_of<GenericHWInterface, ConcreteGenericHW>::value>::type
+write(const ros::Time& time, const ros::Duration& period, std::shared_ptr<ConcreteGenericHW> adapted_hw_interface)
+{
+  adapted_hw_interface->write(time, period);
+}
+
+void write(const ros::Time& time, const ros::Duration& period, std::shared_ptr<GenericHWInterface> adapted_hw_interface)
+{
+  adapted_hw_interface->write(time, period);
+}
+
+}  // namespace combinable_hw_dispatch
+
 template <typename ConcreteGenericHW>
 void CombinableGenericHWAdapter<ConcreteGenericHW>::read(const ros::Time& time, const ros::Duration& period)
 {
-  adapted_hw_interface_->read(time, period);
+  combinable_hw_dispatch::read(time, period, adapted_hw_interface_);
 }
 
 template <typename ConcreteGenericHW>
 void CombinableGenericHWAdapter<ConcreteGenericHW>::write(const ros::Time& time, const ros::Duration& period)
 {
-  adapted_hw_interface_->write(time, period);
+  combinable_hw_dispatch::write(time, period, adapted_hw_interface_);
 }
 
 template <typename ConcreteGenericHW>
