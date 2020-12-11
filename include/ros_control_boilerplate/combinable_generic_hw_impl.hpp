@@ -40,81 +40,50 @@
 #ifndef ROS_CONTROL_BOILERPLATE__COMBINABLE_GENERIC_HW_ADAPTER_IMPL_H
 #define ROS_CONTROL_BOILERPLATE__COMBINABLE_GENERIC_HW_ADAPTER_IMPL_H
 
-#include <ros_control_boilerplate/combinable_generic_hw_adapter.h>
+#include <ros_control_boilerplate/combinable_generic_hw.h>
 
 namespace ros_control_boilerplate
 {
 template <typename ConcreteGenericHW>
-CombinableGenericHWAdapter<ConcreteGenericHW>::CombinableGenericHWAdapter() : adapted_hw_interface_{ nullptr }
+CombinableGenericHW<ConcreteGenericHW>::CombinableGenericHW() : adapted_hw_interface_{ nullptr }
 {
 }
 
 template <typename ConcreteGenericHW>
-CombinableGenericHWAdapter<ConcreteGenericHW>::~CombinableGenericHWAdapter()
+CombinableGenericHW<ConcreteGenericHW>::~CombinableGenericHW()
 {
 }
 
 template <typename ConcreteGenericHW>
-bool CombinableGenericHWAdapter<ConcreteGenericHW>::init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw_nh)
+bool CombinableGenericHW<ConcreteGenericHW>::init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw_nh)
 {
-  adapted_hw_interface_.reset(new ConcreteGenericHW(robot_hw_nh));
+  adapted_hw_interface_.reset(new ConcreteGenericHW(root_nh));
   adapted_hw_interface_->init();
-
   registerInterfaceManager(adapted_hw_interface_.get());
-
   return true;
 }
 
-// SFINAE for GenericHWInterface override
-namespace combinable_hw_dispatch
-{
 template <typename ConcreteGenericHW>
-typename std::enable_if<!std::is_base_of<GenericHWInterface, ConcreteGenericHW>::value>::type
-read(const ros::Time& time, const ros::Duration& period, std::shared_ptr<ConcreteGenericHW> adapted_hw_interface)
+void CombinableGenericHW<ConcreteGenericHW>::read(const ros::Time& time, const ros::Duration& period)
 {
-  adapted_hw_interface->read(time, period);
-}
-
-void read(const ros::Time& time, const ros::Duration& period, std::shared_ptr<GenericHWInterface> adapted_hw_interface)
-{
-  adapted_hw_interface->read(time, period);
+  adapted_hw_interface_->read(time, period);
 }
 
 template <typename ConcreteGenericHW>
-typename std::enable_if<!std::is_base_of<GenericHWInterface, ConcreteGenericHW>::value>::type
-write(const ros::Time& time, const ros::Duration& period, std::shared_ptr<ConcreteGenericHW> adapted_hw_interface)
+void CombinableGenericHW<ConcreteGenericHW>::write(const ros::Time& time, const ros::Duration& period)
 {
-  adapted_hw_interface->write(time, period);
-}
-
-void write(const ros::Time& time, const ros::Duration& period, std::shared_ptr<GenericHWInterface> adapted_hw_interface)
-{
-  adapted_hw_interface->write(time, period);
-}
-
-}  // namespace combinable_hw_dispatch
-
-template <typename ConcreteGenericHW>
-void CombinableGenericHWAdapter<ConcreteGenericHW>::read(const ros::Time& time, const ros::Duration& period)
-{
-  combinable_hw_dispatch::read(time, period, adapted_hw_interface_);
+  adapted_hw_interface_->write(time, period);
 }
 
 template <typename ConcreteGenericHW>
-void CombinableGenericHWAdapter<ConcreteGenericHW>::write(const ros::Time& time, const ros::Duration& period)
-{
-  combinable_hw_dispatch::write(time, period, adapted_hw_interface_);
-}
-
-template <typename ConcreteGenericHW>
-bool CombinableGenericHWAdapter<ConcreteGenericHW>::checkForConflict(
+bool CombinableGenericHW<ConcreteGenericHW>::checkForConflict(
     const std::list<hardware_interface::ControllerInfo>& info) const
 {
   return adapted_hw_interface_->checkForConflict(info);
 }
 
 template <typename ConcreteGenericHW>
-bool CombinableGenericHWAdapter<ConcreteGenericHW>::prepareSwitch(
+bool CombinableGenericHW<ConcreteGenericHW>::prepareSwitch(
     const std::list<hardware_interface::ControllerInfo>& start_list,
     const std::list<hardware_interface::ControllerInfo>& stop_list)
 {
@@ -122,22 +91,21 @@ bool CombinableGenericHWAdapter<ConcreteGenericHW>::prepareSwitch(
 }
 
 template <typename ConcreteGenericHW>
-void CombinableGenericHWAdapter<ConcreteGenericHW>::doSwitch(
-    const std::list<hardware_interface::ControllerInfo>& start_list,
-    const std::list<hardware_interface::ControllerInfo>& stop_list)
+void CombinableGenericHW<ConcreteGenericHW>::doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
+                                                      const std::list<hardware_interface::ControllerInfo>& stop_list)
 {
   adapted_hw_interface_->doSwitch(start_list, stop_list);
 }
 
 template <typename ConcreteGenericHW>
-hardware_interface::RobotHW::SwitchState CombinableGenericHWAdapter<ConcreteGenericHW>::switchResult() const
+hardware_interface::RobotHW::SwitchState CombinableGenericHW<ConcreteGenericHW>::switchResult() const
 {
   return adapted_hw_interface_->switchResult();
 }
 
 template <typename ConcreteGenericHW>
 hardware_interface::RobotHW::SwitchState
-CombinableGenericHWAdapter<ConcreteGenericHW>::switchResult(const hardware_interface::ControllerInfo& controller) const
+CombinableGenericHW<ConcreteGenericHW>::switchResult(const hardware_interface::ControllerInfo& controller) const
 {
   return adapted_hw_interface_->switchResult(controller);
 }

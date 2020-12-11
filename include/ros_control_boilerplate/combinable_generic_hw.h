@@ -55,14 +55,14 @@ namespace ros_control_boilerplate
  * \tparam ConcreteGenericHW Concrete GenericHWInterface to adapt
  */
 template <typename ConcreteGenericHW>
-class CombinableGenericHWAdapter : public hardware_interface::RobotHW
+class CombinableGenericHW : public hardware_interface::RobotHW
 {
 public:
   /** \brief Constructor */
-  CombinableGenericHWAdapter();
+  CombinableGenericHW();
 
   /** \brief Destructor */
-  virtual ~CombinableGenericHWAdapter();
+  virtual ~CombinableGenericHW();
 
   /** \brief Creates and initializes the adapted GenericHWInterface
    *
@@ -140,11 +140,11 @@ public:
   virtual RobotHW::SwitchState switchResult(const hardware_interface::ControllerInfo& controller) const override;
 
 protected:
-  std::shared_ptr<ConcreteGenericHW> adapted_hw_interface_;
+  std::shared_ptr<GenericHWInterface> adapted_hw_interface_;
 };
 
 }  // namespace ros_control_boilerplate
 
-#include <ros_control_boilerplate/combinable_generic_hw_adapter_impl.hpp>
+#include <ros_control_boilerplate/combinable_generic_hw_impl.hpp>
 
 #endif
