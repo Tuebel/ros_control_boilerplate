@@ -57,7 +57,7 @@ CombinableGenericHW<ConcreteGenericHW>::~CombinableGenericHW()
 template <typename ConcreteGenericHW>
 bool CombinableGenericHW<ConcreteGenericHW>::init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw_nh)
 {
-  adapted_hw_interface_.reset(new ConcreteGenericHW(root_nh));
+  adapted_hw_interface_.reset(new ConcreteGenericHW(robot_hw_nh));
   adapted_hw_interface_->init();
   registerInterfaceManager(adapted_hw_interface_.get());
   return true;
