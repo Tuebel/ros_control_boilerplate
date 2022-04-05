@@ -40,6 +40,7 @@
 #include <time.h>
 #include <controller_manager/controller_manager.h>
 #include <hardware_interface/robot_hw.h>
+#include "ros/rate.h"
 
 namespace ros_control_boilerplate
 {
@@ -61,18 +62,20 @@ public:
    * \param NodeHandle
    * \param hardware_interface - the robot-specific hardware interface to be use with your robot
    */
-  GenericHWControlLoop(
-      ros::NodeHandle& nh,
-      std::shared_ptr<hardware_interface::RobotHW> hardware_interface);
+  GenericHWControlLoop(ros::NodeHandle& nh, std::shared_ptr<hardware_interface::RobotHW> hardware_interface);
 
   // Run the control loop (blocking)
   void run();
 
+  ros::Rate get_rate();
+
+  /**
+   * \brief Call this update funcion called with loop_hz_ rate
+   * \param reset_controllers If \c true, stop and start all running controllers before updating
+   */
+  void update(bool reset_controllers = false);
+
 protected:
-
-  // Update funcion called with loop_hz_ rate
-  void update();
-
   // Startup and shutdown of the internal node inside a roscpp program
   ros::NodeHandle nh_;
 
@@ -102,4 +105,4 @@ protected:
 
 };  // end class
 
-}  // namespace
+}  // namespace ros_control_boilerplate
