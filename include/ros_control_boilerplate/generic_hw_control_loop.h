@@ -76,8 +76,6 @@ public:
   void update(bool reset_controllers = false);
 
 protected:
-  // Update funcion called with loop_hz_ rate
-  void update();
 
   // Startup and shutdown of the internal node inside a roscpp program
   ros::NodeHandle nh_;
