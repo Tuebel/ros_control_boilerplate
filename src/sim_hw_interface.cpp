@@ -39,6 +39,10 @@
 
 #include <ros_control_boilerplate/sim_hw_interface.h>
 
+// Pluginlib export for combined_robot_hw
+#include <ros_control_boilerplate/combinable_generic_hw.h>
+#include <pluginlib/class_list_macros.hpp>
+
 // ROS parameter loading
 #include <rosparam_shortcuts/rosparam_shortcuts.h>
 
@@ -148,4 +152,6 @@ void SimHWInterface::positionControlSimulation(ros::Duration& elapsed_time, cons
   joint_position_prev_[joint_id] = joint_position_[joint_id];
 }
 
-}  // namespace ros_control_boilerplate
+}  // namespace
+
+PLUGINLIB_EXPORT_CLASS(ros_control_boilerplate::CombinableGenericHW<ros_control_boilerplate::SimHWInterface>, hardware_interface::RobotHW)

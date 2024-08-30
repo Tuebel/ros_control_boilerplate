@@ -40,6 +40,7 @@
 #include <time.h>
 #include <controller_manager/controller_manager.h>
 #include <hardware_interface/robot_hw.h>
+#include "ros/rate.h"
 
 namespace ros_control_boilerplate
 {
@@ -65,6 +66,14 @@ public:
 
   // Run the control loop (blocking)
   void run();
+
+  ros::Rate get_rate();
+
+  /**
+   * \brief Call this update funcion called with loop_hz_ rate
+   * \param reset_controllers If \c true, stop and start all running controllers before updating
+   */
+  void update(bool reset_controllers = false);
 
 protected:
   // Update funcion called with loop_hz_ rate

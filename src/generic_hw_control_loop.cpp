@@ -74,7 +74,12 @@ void GenericHWControlLoop::run()
   }
 }
 
-void GenericHWControlLoop::update()
+ros::Rate GenericHWControlLoop::get_rate()
+{
+  return ros::Rate(loop_hz_);
+}
+
+void GenericHWControlLoop::update(bool reset_controllers)
 {
   // Get change in time
   clock_gettime(CLOCK_MONOTONIC, &current_time_);
@@ -98,7 +103,7 @@ void GenericHWControlLoop::update()
   hardware_interface_->read(now, elapsed_time_);
 
   // Control
-  controller_manager_->update(now, elapsed_time_);
+  controller_manager_->update(now, elapsed_time_, reset_controllers);
 
   // Output
   hardware_interface_->write(now, elapsed_time_);

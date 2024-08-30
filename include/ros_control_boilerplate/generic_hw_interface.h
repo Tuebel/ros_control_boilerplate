@@ -125,7 +125,7 @@ public:
   /**
    * \brief Perform (in non-realtime) all necessary hardware interface switches in order to start
    * and stop the given controllers.
-   * Start and stop list are disjoint. The feasability was checked in canSwitch() beforehand.
+   * Start and stop list are disjoint. The feasability was checked in prepareSwitch() beforehand.
    */
   virtual void doSwitch(const std::list<hardware_interface::ControllerInfo>& start_list,
                         const std::list<hardware_interface::ControllerInfo>& stop_list)
