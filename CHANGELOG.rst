@@ -2,6 +2,21 @@
 Changelog for package ros_control_boilerplate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.2 (2021-03-16)
+------------------
+* Revert "Replaced boost with std shared_ptr"
+  This reverts commit 9fa14cd3d00328efa3d44d7bf4d849ce909310f0.
+* Contributors: JafarAbdi
+
+0.5.1 (2021-02-23)
+------------------
+* Replaced boost with std shared_ptr
+* Make NodeHandle a const reference
+* test_trajectory:  Read joints list from trajectory controller params
+* Generalize GenericHWControlLoop to all types of RobotHW (`#38 <https://github.com/PickNikRobotics/ros_control_boilerplate/issues/38>`_)
+* Increase num AsyncSpinners where control loops are instantiated
+* Contributors: AndyZe, Dave Coleman, Jafar Abdi, John Morris, Ramon Wijnands, Robert Wilbrandt, RobertWilbrandt, Tim Übelhör
+
 0.5.0 (2019-09-18)
 ------------------
 * Merge pull request `#20 <https://github.com/PickNikRobotics/ros_control_boilerplate/issues/20>`_ from ipa-mdl/fix-loop-deadlock
